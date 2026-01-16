@@ -35,9 +35,7 @@ let persons = [
     }
 ]
 
-app.get('/', (req, res) => {
-    res.send('<h1>Hello</h1>')
-})
+app.use(express.static('dist'))
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
@@ -83,6 +81,10 @@ app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
     persons = persons.filter(e => e.id !== id)
     res.status(204).end()
+})
+
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
 const PORT = process.env.PORT || 3001
