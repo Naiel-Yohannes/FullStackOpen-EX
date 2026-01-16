@@ -35,7 +35,7 @@ let persons = [
     }
 ]
 
-app.use(express.static('dist'))
+const path = require('path');
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
