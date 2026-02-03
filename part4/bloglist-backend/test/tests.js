@@ -35,3 +35,48 @@ describe('total likes', () => {
     assert.strictEqual(result, 6)
   })
 })
+
+describe('blog with most likes', () => {
+
+  const listWithOneBlog = [
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    }
+  ]
+  const listWithTwoBlog = [
+    {
+      title: 'New statement',
+      author: 'Nabek John',
+      url: 'https://google.com',
+      likes: 9
+    },
+    {
+      title: 'Another one',
+      author: 'Erob Zewdu',
+      likes: 23
+    }
+  ]
+
+  test('of empty list is zero', () => {
+    const result = listHelper.favoriteBlog([])
+    assert.deepStrictEqual(result, [])
+  }),
+  test('when list has only one blog equals that blog', () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    assert.deepStrictEqual(result, [{  
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    }])
+  }),
+  test('of a bigger list is the one with most likes', () => {
+    const result = listHelper.favoriteBlog(listWithTwoBlog)
+    assert.deepStrictEqual(result, [{
+      title: 'Another one',
+      author: 'Erob Zewdu',
+      likes: 23
+    }])
+  })
+})
