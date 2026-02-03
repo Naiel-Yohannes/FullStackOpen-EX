@@ -1,6 +1,8 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
+const { access } = require('node:fs')
+const { blob } = require('node:stream/consumers')
 
 test('dummy returns one', () => {
   const blogs = []
@@ -78,5 +80,20 @@ describe('blog with most likes', () => {
       author: 'Erob Zewdu',
       likes: 23
     }])
+  })
+})
+
+describe('person with the most blogs', () => {
+  test('there is no person with a blog post', () => {
+    const result = listHelper.mostBlogs([])
+    assert.deepStrictEqual(result, 0)
+  }),
+  test('person with a blog post of 1', () => {
+    const result = listHelper.mostBlogs([{author: 'Bob', likes: 8}, {author: 'Joe', likes: 2}])
+    assert.deepStrictEqual(result, {author: 'Bob', blog: 1})
+  }),
+  test('person with a blog post of 3', () => {
+    const result = listHelper.mostBlogs([{author: 'Bob', likes: 5}, {author: 'Jane', likes: 1}, {author: 'Bob', likes: 1}, {author: 'Bob', likes: 3}])
+    assert.deepStrictEqual(result, {author: 'Bob', blog: 3})
   })
 })

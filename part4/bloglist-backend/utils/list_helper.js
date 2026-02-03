@@ -18,11 +18,32 @@ const favoriteBlog = (blogs) => {
   return largestObj
 }
 
-console.log(favoriteBlog([{na: "n", likes: 2}, {na: "g", likes: 4}]));
+const mostBlogs = (blogs) => {
+  const authors = []
 
+  blogs.forEach(b => {
+    const exists = authors.find(a => a.author === b.author)
+
+    if (exists) {
+      exists.blog += 1
+    }
+
+    else{
+      authors.push({author: b.author, blog: 1})
+    }
+    
+  })
+
+  if(authors.length > 0){
+    const topAuthor = authors.reduce((max, a) => a.blog > max.blog ? a : max) 
+    return topAuthor
+  }
+  return 0
+}
 
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
