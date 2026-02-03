@@ -97,3 +97,18 @@ describe('person with the most blogs', () => {
     assert.deepStrictEqual(result, {author: 'Bob', blog: 3})
   })
 })
+
+describe('blog with the most likes', () => {
+  test('of empty list is zero', () => {
+    const result = listHelper.mostLikes([])
+    assert.deepStrictEqual(result, 0)
+  }),
+  test('blog post with number of likes of 1', () => {
+    const result = listHelper.mostLikes([{author: 'John', likes: 1}])
+    assert.deepStrictEqual(result, [{author: 'John', likes: 1}])
+  }),
+  test('blog post with number of likes of 12', () => {
+    const result = listHelper.mostLikes([{author: 'Jake', likes: 3}, {author: 'Tina', likes: 12}, {author: 'Abdu', likes: 7}])
+    assert.deepStrictEqual(result, [{author: 'Tina', likes: 12}])
+  })
+})
