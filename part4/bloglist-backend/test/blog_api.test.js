@@ -30,6 +30,15 @@ describe('tests for backend', () => {
     test('all blogs are returned', async () => {
         const response = await api.get('/api/blogs').expect('Content-Type', /application\/json/)
         assert.strictEqual(response.body.length, initialBlogs.length)
+    }),
+    test('identifier property of the blog posts is named id', async() => {
+        const response = await api.get('/api/blogs')
+        const blog = response.body[0]
+        
+        blog.forEach(b => {
+            assert(b.id)
+            assert.strictEqual(b._id, undefined)
+        })
     })
 })
 
