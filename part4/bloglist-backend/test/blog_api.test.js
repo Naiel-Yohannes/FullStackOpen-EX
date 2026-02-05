@@ -33,7 +33,7 @@ describe('tests for backend', () => {
     }),
     test('identifier property of the blog posts is named id', async() => {
         const response = await api.get('/api/blogs')
-        const blog = response.body[0]
+        const blog = response.body
         
         blog.forEach(b => {
             assert(b.id)
