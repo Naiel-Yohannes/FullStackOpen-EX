@@ -39,6 +39,23 @@ describe('tests for backend', () => {
             assert(b.id)
             assert.strictEqual(b._id, undefined)
         })
+    }), 
+    test('1 new blog added', async() => {
+        const newBlog = {
+            title: 'Test',
+            author: 'FSO',
+            likes: 8
+        }
+
+        await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+        const title = response.body.map(b => b.title)
+        assert.strictEqual(response.body.length, initialBlogs.length + 1)
+        assert(title.includes('Test'))
     })
 })
 
