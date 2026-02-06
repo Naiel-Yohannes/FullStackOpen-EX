@@ -56,6 +56,21 @@ describe('tests for backend', () => {
         const title = response.body.map(b => b.title)
         assert.strictEqual(response.body.length, initialBlogs.length + 1)
         assert(title.includes('Test'))
+    }),
+    test('missing property of likes is set to 0', async() => {
+        const newBlog = {
+            title: 'Shadow slave',
+            author: 'Sunny'
+        }
+
+        await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+        const request = await api.get('/api/blogs')
+
+        assert.strictEqual(request.body[request.body.length - 1].likes, 0)
     })
 })
 
