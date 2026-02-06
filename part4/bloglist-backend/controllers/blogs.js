@@ -7,7 +7,16 @@ blogsRoute.get('/', async (req, res) => {
 })
 
 blogsRoute.post('/', async (req, res) => {
-  const blog = new Blog(req.body)
+  const blog = new Blog({
+    title: req.body.title,
+    author: req.body.author,
+    url: req.body.url,
+    likes: req.body.likes
+  })
+
+  if(blog.title === undefined || blog.url === undefined) {
+    return res.status(400).json({error: 'content missing'})
+  }
 
   const result = await blog.save()
   res.status(201).json(result)

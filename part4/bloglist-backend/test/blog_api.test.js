@@ -17,6 +17,7 @@ const initialBlogs = [
     {
       title: 'Frontend',
       author: 'Nabi',
+      url: 'https://w3schools.com',
       likes: 2
     }
 ]
@@ -44,6 +45,7 @@ describe('tests for backend', () => {
         const newBlog = {
             title: 'Test',
             author: 'FSO',
+            url: 'https://pinterest.com',
             likes: 8
         }
 
@@ -60,6 +62,7 @@ describe('tests for backend', () => {
     test('missing property of likes is set to 0', async() => {
         const newBlog = {
             title: 'Shadow slave',
+            url: 'https://wikipidia.com',
             author: 'Sunny'
         }
 
@@ -71,6 +74,20 @@ describe('tests for backend', () => {
         const request = await api.get('/api/blogs')
 
         assert.strictEqual(request.body[request.body.length - 1].likes, 0)
+    }),
+    test('missing data can not be sent', async() => {
+        const newBlog = {
+            author: 'Nemphis',
+            likes: 50
+        }
+
+        await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+
+        const response = await api.get('/api/blogs')
+        const title = response.body.map(b => b.author)
+        assert(!title.includes('Nemphis'))
     })
 })
 
