@@ -101,6 +101,23 @@ describe('tests for backend', () => {
         const idExists = response.body.map(b => b.id)
         assert(!idExists.includes(blog.id))
         assert.strictEqual(response.body.length, blogs.length - 1)
+    }),
+    test('blog is updated', async() => {
+        const blogs = await Blog.find({})
+        const blog = blogs[0]
+
+        const changedBlog = {
+            author: 'Oliver',
+            url: 'https://spotify.com',
+            likes: 43
+        }
+
+        await api.put(`/api/blogs/${blog.id}`)
+        .send(changedBlog)
+        .expect(200)
+
+        const response = await api.get(`/api/blogs/${blog.id}`)
+        assert.strictEqual(response.body.likes, 43)
     })
 })
 

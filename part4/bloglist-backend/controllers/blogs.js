@@ -6,6 +6,14 @@ blogsRoute.get('/', async (req, res) => {
     res.json(blogs)
 })
 
+blogsRoute.get('/:id', async (req, res) => {
+    const blog = await Blog.findById(req.params.id)
+    if(!blog){
+      res.status(404).end()
+    }
+    res.json(blog)
+})
+
 blogsRoute.post('/', async (req, res) => {
   const blog = new Blog({
     title: req.body.title,
@@ -20,6 +28,21 @@ blogsRoute.post('/', async (req, res) => {
 
   const result = await blog.save()
   res.status(201).json(result)
+})
+
+blogsRoute.put('/:id', async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  if(!blog){
+    return res.status(404).end()
+  }
+
+  if(req.body.title !== undefined) blog.title = req.body.title
+  if(req.body.author !== undefined) blog.author = req.body.author
+  if(req.body.url !== undefined) blog.url = req.body.url
+  if(req.body.likes !== undefined) blog.likes = req.body.likes
+
+  const updatedBlog = await blog.save()
+  res.status(200).json(updatedBlog)
 })
 
 blogsRoute.delete('/:id', async (req, res) => {
