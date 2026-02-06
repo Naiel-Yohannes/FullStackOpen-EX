@@ -88,6 +88,19 @@ describe('tests for backend', () => {
         const response = await api.get('/api/blogs')
         const title = response.body.map(b => b.author)
         assert(!title.includes('Nemphis'))
+    }),
+    test('delition of blog', async() => {
+        const blogs = await Blog.find({})
+        const blog = blogs[0]
+
+        await api.delete(`/api/blogs/${blog.id}`)
+        .expect(204)
+
+        const response = await api.get('/api/blogs')
+
+        const idExists = response.body.map(b => b.id)
+        assert(!idExists.includes(blog.id))
+        assert.strictEqual(response.body.length, blogs.length - 1)
     })
 })
 
