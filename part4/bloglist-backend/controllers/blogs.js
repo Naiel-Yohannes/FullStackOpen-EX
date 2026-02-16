@@ -1,8 +1,9 @@
 const blogsRoute = require('express').Router()
 const Blog = require('../modules/blog')
+const User = require('../modules/user')
 
 blogsRoute.get('/', async (req, res) => {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user', {blogs: 0})
     res.json(blogs)
 })
 
@@ -15,11 +16,18 @@ blogsRoute.get('/:id', async (req, res) => {
 })
 
 blogsRoute.post('/', async (req, res) => {
+  const user = await User.findById(req.body.userId)
+
+  if (!user) {
+    return res.status(400).json({ error: 'userId missing or not valid' })
+  }
+
   const blog = new Blog({
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
-    likes: req.body.likes
+    likes: req.body.likes,
+    user: user._id
   })
 
   if(blog.title === undefined || blog.url === undefined) {
@@ -27,6 +35,8 @@ blogsRoute.post('/', async (req, res) => {
   }
 
   const result = await blog.save()
+  user.blogs = user.blogs.concat(result._id)
+  await user.save()
   res.status(201).json(result)
 })
 
