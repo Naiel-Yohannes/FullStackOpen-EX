@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const requestLogger = require('./utils/middleware')
 const mongoose = require('mongoose')
 const blogsRoute = require('./controllers/blogs')
+const userRoute = require('./controllers/users')
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use(express.json())
 app.use(requestLogger)
 app.use(morgan('dev'))
 
+app.use('/api/users', userRoute)
 app.use('/api/blogs', blogsRoute)
 
 module.exports = app
