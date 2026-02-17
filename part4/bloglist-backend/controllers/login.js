@@ -18,7 +18,9 @@ loginRoute.post('/', async(req, res) => {
         id: user.id
     }
 
-    const token = jws.sign(userForToken, process.env.SECRET)
+    const token = jws.sign(userForToken, process.env.SECRET, {
+        expiresIn: '1h'
+    })
     res.status(200).json({ token, username: user.username, name: user.name })
 })
 
