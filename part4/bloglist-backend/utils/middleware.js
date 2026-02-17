@@ -8,4 +8,15 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-module.exports = requestLogger
+const getToken = (req, res, next) => {
+  const authorization = req.get('authorization')
+  if(authorization && authorization.startsWith('Bearer ')){
+    req.token = authorization.replace('Bearer ', '')
+  }else{
+    req.token = null
+  }
+  
+  next()
+}
+
+module.exports = {requestLogger, getToken}
