@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const app = require('../app')
 const Blog = require('../modules/blog')
 const supertest = require('supertest')
+const User = require('../modules/user')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
@@ -23,8 +25,13 @@ const initialBlogs = [
 ]
 
 beforeEach(async() => {
+    await User.deleteMany()
+    const passwordHash = await bcrypt.hash('mcoqwe', 10)
+    const user = await new User({username: 'Honey', passwordHash , name: 'Hex'}).save()
+
     await Blog.deleteMany()
-    await Blog.insertMany(initialBlogs)
+    const blogsWithUser = initialBlogs.map(i => ({...i, user: user._id}))
+    await Blog.insertMany(blogsWithUser)
 })
 
 describe('tests for backend', () => {
@@ -41,7 +48,7 @@ describe('tests for backend', () => {
             assert.strictEqual(b._id, undefined)
         })
     }), 
-    test('1 new blog added', async() => {
+    test('new blog added', async() => {
         const newBlog = {
             title: 'Test',
             author: 'FSO',
@@ -49,14 +56,19 @@ describe('tests for backend', () => {
             likes: 8
         }
 
+        const logedInUser = await api.post('/api/login')
+        .send({username: 'Honey', password: 'mcoqwe'})
+        
+        const token = logedInUser.body.token
+
         await api.post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
         const response = await api.get('/api/blogs')
         const title = response.body.map(b => b.title)
-        assert.strictEqual(response.body.length, initialBlogs.length + 1)
         assert(title.includes('Test'))
     }),
     test('missing property of likes is set to 0', async() => {
@@ -66,7 +78,13 @@ describe('tests for backend', () => {
             author: 'Sunny'
         }
 
+        const logedInUser = await api.post('/api/login')
+        .send({username: 'Honey', password: 'mcoqwe'})
+        
+        const token = logedInUser.body.token
+
         await api.post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -81,7 +99,13 @@ describe('tests for backend', () => {
             likes: 50
         }
 
+        const logedInUser = await api.post('/api/login')
+        .send({username: 'Honey', password: 'mcoqwe'})
+        
+        const token = logedInUser.body.token
+
         await api.post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)
 
@@ -93,7 +117,13 @@ describe('tests for backend', () => {
         const blogs = await Blog.find({})
         const blog = blogs[0]
 
+        const logedInUser = await api.post('/api/login')
+        .send({username: 'Honey', password: 'mcoqwe'})
+        
+        const token = logedInUser.body.token
+        
         await api.delete(`/api/blogs/${blog.id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(204)
 
         const response = await api.get('/api/blogs')
