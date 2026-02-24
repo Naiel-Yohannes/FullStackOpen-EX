@@ -31,6 +31,23 @@ const App = () => {
       number
     }
 
+    if (!newName.trim() || !number.trim()) {
+      setNotify({name: 'Name and number are required', type: 'error'})
+      setTimeout(() => setNotify(null), 3000)
+      return
+    }
+
+    if (newName.trim().length < 3) {
+      setNotify({name: 'Name must be at least 3 characters', type: 'error'})
+      setTimeout(() => setNotify(null), 3000)
+      return
+    }
+
+    if (number.trim().length < 8) {
+      setNotify({name: 'Number must be at least 8 characters', type: 'error'})
+      setTimeout(() => setNotify(null), 3000)
+      return
+    }
    
    if(newName.trim()){   
     if(!persons.some(person => person.name === inps.name)){
