@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import LoginForm from './components/Login'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import Create from './components/Create'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,9 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [timer, setTimer] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('savedUser')
@@ -54,6 +58,23 @@ const App = () => {
     blogService.setToken(null)
   }
 
+  const createForm = async(e) => {
+    e.preventDefault()
+
+    const newBlog = {
+      title,
+      author,
+      url
+    }
+
+    const created = await blogService.create(newBlog)
+    setBlogs(blogs.concat(created))
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   return (
     <div>
       {message && <Notification message={message} />}
@@ -63,6 +84,7 @@ const App = () => {
         <div> 
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
+          <Create createForm={createForm} title={title} setTitle={e => setTitle(e.target.value)} author={author} setAuthor={e => setAuthor(e.target.value)} url={url} setUrl={e => setUrl(e.target.value)} />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )} 
