@@ -33,19 +33,28 @@ const App = () => {
   const formHandler = async(e) => {
     e.preventDefault()
 
-    try{
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('savedUser', JSON.stringify(user))
-      blogService.setToken(user.token)
+    if(password.trim() && username.trim()){
+      try{
+        const user = await loginService.login({ username, password })
+        window.localStorage.setItem('savedUser', JSON.stringify(user))
+        blogService.setToken(user.token)
 
-      setUser(user)
-      setPassword('')
-      setUsername('')
-    }catch{
-      if(timer) {
-        clearTimeout(timer)
+        setUser(user)
+        setPassword('')
+        setUsername('')
+      }catch{
+        if(timer) {
+          clearTimeout(timer)
+        }
+        setMessage({text: 'wrong username or password', type: 'error'})
+        setUsername('')
+        setPassword('')
+        setTimer(setTimeout(() => {
+          setMessage(null)
+        }, 3000))
       }
-      setMessage({text: 'wrong credentials', type: 'error'})
+    }else{
+      setMessage({text: 'ensert both username and password', type: 'error'})
       setTimer(setTimeout(() => {
         setMessage(null)
       }, 3000))
@@ -61,18 +70,33 @@ const App = () => {
   const createForm = async(e) => {
     e.preventDefault()
 
-    const newBlog = {
-      title,
-      author,
-      url
+    try {
+      const newBlog = {
+        title,
+        author,
+        url
+      }
+
+      const created = await blogService.create(newBlog)
+      setBlogs(blogs.concat(created))
+
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      if(timer){
+        clearTimeout(timer)
+      }
+      setMessage({text: `a new blog ${title} by ${author} added`, type: 'success'})
+      setTimer(setTimeout(() => {
+        setMessage(null)
+      }, 3000))
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'Failed to create blog'
+      if(timer){
+        clearTimeout(timer)
+      }
+      setMessage({text: errorMessage, type: 'error'})
     }
-
-    const created = await blogService.create(newBlog)
-    setBlogs(blogs.concat(created))
-
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   return (
