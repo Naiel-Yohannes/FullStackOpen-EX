@@ -5,6 +5,7 @@ import LoginForm from './components/Login'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import Create from './components/Create'
+import Toggle from './components/Toggle'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -108,7 +109,9 @@ const App = () => {
         <div> 
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
-          <Create createForm={createForm} title={title} setTitle={e => setTitle(e.target.value)} author={author} setAuthor={e => setAuthor(e.target.value)} url={url} setUrl={e => setUrl(e.target.value)} />
+          <Toggle>
+            <Create createForm={createForm} title={title} setTitle={e => setTitle(e.target.value)} author={author} setAuthor={e => setAuthor(e.target.value)} url={url} setUrl={e => setUrl(e.target.value)} />
+          </Toggle>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )} 
