@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogService from '../services/blogs.js'
 
 const Blog = ({ blogs, blog, setBlogs, user }) => {
@@ -26,7 +26,7 @@ const Blog = ({ blogs, blog, setBlogs, user }) => {
 
   const incrementLike = async(id) => {
     const selectedBlog = blogs.find(b => b.id === id)
-    const updatedBlog = await blogService.update(id, {...selectedBlog, likes: selectedBlog.likes + 1})
+    const updatedBlog = await blogService.update(id, { ...selectedBlog, likes: selectedBlog.likes + 1 })
     setBlogs(blogs.map(b => b.id === id ? updatedBlog : b))
   }
 
@@ -40,18 +40,18 @@ const Blog = ({ blogs, blog, setBlogs, user }) => {
 
   return(
     <div style={blogStyle}>
-      {!display && 
+      {!display &&
         <div>
           {blog.title} {blog.author} <button onClick={toggleDisplay}>view</button>
         </div>
       }
-      {display && 
+      {display &&
         <div>
           {blog.title} {blog.author} <button onClick={toggleDisplay}>hide</button><br />
           {blog.url} <br />
           likes {blog.likes} <button onClick={() => incrementLike(blog.id)}>like</button> <br />
           {blog.user?.username}
-          
+
           {user.username === blog.user?.username ? <button style={removeStyle} onClick={() => removeBlog(blog.id)}>remove</button> : null}
         </div>
       }

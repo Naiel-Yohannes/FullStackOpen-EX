@@ -26,7 +26,7 @@ const App = () => {
 
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   const formHandler = async(e) => {
@@ -45,7 +45,7 @@ const App = () => {
         if(timer) {
           clearTimeout(timer)
         }
-        setMessage({text: 'wrong username or password', type: 'error'})
+        setMessage({ text: 'wrong username or password', type: 'error' })
         setUsername('')
         setPassword('')
         setTimer(setTimeout(() => {
@@ -53,14 +53,14 @@ const App = () => {
         }, 3000))
       }
     }else{
-      setMessage({text: 'ensert both username and password', type: 'error'})
+      setMessage({ text: 'ensert both username and password', type: 'error' })
       setTimer(setTimeout(() => {
         setMessage(null)
       }, 3000))
     }
   }
 
-  const logout = () =>{
+  const logout = () => {
     window.localStorage.removeItem('savedUser')
     setUser(null)
     blogService.setToken(null)
@@ -75,7 +75,7 @@ const App = () => {
       {!user && <LoginForm setUsername={setUsername} username={username} setPassword={setPassword} password={password} formHandler={formHandler} /> }
 
       {user &&
-        <div> 
+        <div>
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
           <Toggle>
@@ -83,7 +83,7 @@ const App = () => {
           </Toggle>
           {sortedBlogs.map(blog =>
             <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} user={user} />
-          )} 
+          )}
         </div>
       }
     </div>
