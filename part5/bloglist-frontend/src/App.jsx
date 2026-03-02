@@ -66,6 +66,7 @@ const App = () => {
     blogService.setToken(null)
   }
 
+  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
 
 
   return (
@@ -80,7 +81,7 @@ const App = () => {
           <Toggle>
             <Create blogs={blogs} setBlogs={setBlogs} timer={timer} setTimer={setTimer} setMessage={setMessage} />
           </Toggle>
-          {blogs.map(blog =>
+          {sortedBlogs.map(blog =>
             <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} />
           )} 
         </div>
