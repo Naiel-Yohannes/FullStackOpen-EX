@@ -81,7 +81,7 @@ const App = () => {
             <Create blogs={blogs} setBlogs={setBlogs} timer={timer} setTimer={setTimer} setMessage={setMessage} />
           </Toggle>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} />
           )} 
         </div>
       }
