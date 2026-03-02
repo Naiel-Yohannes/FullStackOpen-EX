@@ -14,9 +14,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [timer, setTimer] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('savedUser')
@@ -68,37 +66,7 @@ const App = () => {
     blogService.setToken(null)
   }
 
-  const createForm = async(e) => {
-    e.preventDefault()
 
-    try {
-      const newBlog = {
-        title,
-        author,
-        url
-      }
-
-      const created = await blogService.create(newBlog)
-      setBlogs(blogs.concat(created))
-
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      if(timer){
-        clearTimeout(timer)
-      }
-      setMessage({text: `a new blog ${title} by ${author} added`, type: 'success'})
-      setTimer(setTimeout(() => {
-        setMessage(null)
-      }, 3000))
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Failed to create blog'
-      if(timer){
-        clearTimeout(timer)
-      }
-      setMessage({text: errorMessage, type: 'error'})
-    }
-  }
 
   return (
     <div>
@@ -110,7 +78,7 @@ const App = () => {
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
           <Toggle>
-            <Create createForm={createForm} title={title} setTitle={e => setTitle(e.target.value)} author={author} setAuthor={e => setAuthor(e.target.value)} url={url} setUrl={e => setUrl(e.target.value)} />
+            <Create blogs={blogs} setBlogs={setBlogs} timer={timer} setTimer={setTimer} setMessage={setMessage} />
           </Toggle>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
