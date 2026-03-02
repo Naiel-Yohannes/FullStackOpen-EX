@@ -34,7 +34,8 @@ const Blog = ({ blogs, blog, setBlogs }) => {
           {blog.title} <button onClick={toggleDisplay}>hide</button><br />
           {blog.url} <br />
           likes {blog.likes} <button onClick={() => incrementLike(blog.id)}>like</button> <br />
-          {blog.author}
+          {blog.user?.username}
+          
         </div>
       }
     </div>

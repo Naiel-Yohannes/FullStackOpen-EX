@@ -10,7 +10,7 @@ blogsRoute.get('/', async (req, res) => {
 })
 
 blogsRoute.get('/:id', async (req, res) => {
-    const blog = await Blog.findById(req.params.id)
+    const blog = await Blog.findById(req.params.id).populate('user', {blogs: 0})
     if(!blog){
       res.status(404).end()
     }
@@ -39,7 +39,7 @@ blogsRoute.post('/', userExtractor ,async (req, res) => {
 })
 
 blogsRoute.put('/:id', async (req, res) => {
-  const blog = await Blog.findById(req.params.id)
+  const blog = await Blog.findById(req.params.id).populate('user', {blogs: 0})
   if(!blog){
     return res.status(404).end()
   }
@@ -56,7 +56,7 @@ blogsRoute.put('/:id', async (req, res) => {
 blogsRoute.delete('/:id', userExtractor, async (req, res) => {
   const id = req.params.id
 
-  const blog = await Blog.findById(id)
+  const blog = await Blog.findById(id).populate('user', {blogs: 0})
 
   if(!blog){
     return res.status(404).json({error: 'blog not found'})
