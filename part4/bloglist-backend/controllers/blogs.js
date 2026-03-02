@@ -62,7 +62,7 @@ blogsRoute.delete('/:id', userExtractor, async (req, res) => {
     return res.status(404).json({error: 'blog not found'})
   }
 
-  if(blog.user.toString() === req.user._id.toString()) {
+  if(blog.user._id.toString() === req.user._id.toString()) {
     await Blog.findByIdAndDelete(id)
     return res.status(204).end()
   }
