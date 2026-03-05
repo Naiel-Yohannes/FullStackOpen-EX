@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
 
 test('Blog\'s title and author are rendered', () => {
@@ -22,3 +23,28 @@ test('Blog\'s title and author are rendered', () => {
     expect(element4).toBeNull()
 })
 
+test('Show blog details', async() => {
+    const blog = {
+        title: 'somethings arent important',
+        author: 'hana',
+        url: 'https//:youtube.com',
+        likes: 4,
+        user: { username: 'hana123' }
+    }
+
+    const currentUser = { username: 'hana123' }
+
+    render(<Blog blog={blog} user={currentUser} />)
+
+    const user = userEvent.setup()
+
+    const button = screen.getByText('view')
+
+    await user.click(button)
+
+    const element1 = screen.getByText('https//:youtube.com', { exact:false })
+    const element2 = screen.getByText(4, { exact:false })
+
+    expect(element1).toBeDefined()
+    expect(element2).toBeDefined()
+})
