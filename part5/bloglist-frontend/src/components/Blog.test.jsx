@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
+import blogService from '../services/blogs.js'
 
 test('Blog\'s title and author are rendered', () => {
     const blog = {
@@ -48,3 +49,36 @@ test('Show blog details', async() => {
     expect(element1).toBeDefined()
     expect(element2).toBeDefined()
 })
+
+// i had to improvise by adding a new code outide the course material cos i originally didnt write a prop the like button could use
+
+vi.mock('../services/blogs.js')
+test('check if the like is clicked twice', async() => {
+    const blog = {
+        title: 'I should have made a prop, sorry',
+        author: 'naiel',
+        url: 'https//:sorry.com',
+        likes: 0,
+        user: { username: 'naiel123' }
+    }
+
+    const currentUser = { username: 'naiel123'}
+    const mockPromise = vi.fn().mockResolvedValue({ ...blog, likes: 1 })
+    blogService.update = mockPromise
+
+    render(<Blog blog={blog} user={currentUser} blogs={[blog]} setBlogs={vi.fn()} />)
+
+    const user = userEvent.setup()
+
+    const button1 = screen.getByText('view')
+
+    await user.click(button1)
+
+    const button2 = screen.getByText('like')
+
+    await user.click(button2)
+    await user.click(button2)
+
+    expect(mockPromise).toHaveBeenCalledTimes(2)
+})
+
