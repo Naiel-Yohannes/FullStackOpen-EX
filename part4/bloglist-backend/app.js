@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const blogsRoute = require('./controllers/blogs')
 const userRoute = require('./controllers/users')
 const loginRoute = require('./controllers/login')
+const testRoute = require('./controllers/test')
 
 const app = express()
 
@@ -29,5 +30,9 @@ app.use(getToken)
 app.use('/api/login', loginRoute)
 app.use('/api/users', userRoute)
 app.use('/api/blogs', blogsRoute)
+
+if(process.env.NODE_ENV === 'test'){
+  app.use('/api/testing', testRoute)
+}
 
 module.exports = app
