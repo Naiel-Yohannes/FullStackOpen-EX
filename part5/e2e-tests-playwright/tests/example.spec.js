@@ -37,4 +37,22 @@ describe('Blog app', () => {
       await expect(page.getByText('logged in')).not.toBeVisible()
     })
   })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await page.getByLabel('username').fill('hari')
+      await page.getByLabel('password').fill('moringa')
+      await page.getByRole('button', {name: 'login'}).click()
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', {name:'create new blog'}).click()
+      await page.getByLabel('title:').fill('why playwright testing is simple')
+      await page.getByLabel('author:').fill('a random dev')
+      await page.getByLabel('url:').fill('https://playwright.dev')
+      await page.getByRole('button', {name:'create'}).click()
+      
+      await expect(page.getByText('why playwright testing is simple a random dev')).toBeVisible()
+    })
+  })
 })
