@@ -55,4 +55,27 @@ describe('Blog app', () => {
       await expect(page.getByText('why playwright testing is simple a random dev')).toBeVisible()
     })
   })
+
+  describe('like', () => {
+    beforeEach(async({page}) => {
+      await page.getByLabel('username').fill('hari')
+      await page.getByLabel('password').fill('moringa')
+      await page.getByRole('button', {name: 'login'}).click()
+
+      await page.getByRole('button', {name:'create new blog'}).click()
+      await page.getByLabel('title:').fill('test like')
+      await page.getByLabel('author:').fill('tester')
+      await page.getByLabel('url:').fill('https://playwright.dev')
+      await page.getByRole('button', {name:'create'}).click()
+    })
+
+    test('a blog can be liked', async({page}) => {
+      await page.getByRole('button', {name: 'view'}).click()
+      await page.getByRole('button', {name: 'like'}).click()
+      await expect(page.getByText('likes 1')).toBeVisible()
+
+      await page.getByRole('button', {name: 'like'}).click()
+      await expect(page.getByText('likes 2')).toBeVisible()
+    })
+  })
 })
