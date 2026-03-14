@@ -14,5 +14,16 @@ const notificationSlice = createSlice({
   }
 })
 
-export const {likeNotification, clearNotification} = notificationSlice.actions
+const {likeNotification, clearNotification} = notificationSlice.actions
+
+export const notification = (message, time) => {
+    return async (dispatch) => {
+        dispatch(likeNotification(message))
+    
+        setTimeout(() => {
+            dispatch(clearNotification())
+        }, time * 1000);
+    }
+}
+
 export default notificationSlice.reducer
