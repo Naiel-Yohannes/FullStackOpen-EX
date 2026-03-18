@@ -1,21 +1,21 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
-import { useDispatch } from 'react-redux';
-import {notificationState} from './reducers/notification'
+import NotificationContext, {showNotification} from './reducers/notification.jsx'
 import anecdoteServices from "../services/request";
+import { useContext } from 'react';
 
 const AnecdoteForm = () => {
+  const {dispatchNotif} = useContext(NotificationContext)
   const queryClient = useQueryClient()
-  const dispatch = useDispatch()
 
   const anecdoteMutation = useMutation({
     mutationFn: anecdoteServices.createNew,
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
-      dispatch(notificationState(`Added ${newAnecdote.content} to anecdotes`, 5))
+      showNotification(dispatchNotif, `Added ${newAnecdote.content} to anecdotes`, 5)
     },
     onError: (error) => {
-      dispatch(notificationState(error.message, 5))
+      showNotification(dispatchNotif, 'too short anecdote, must have length 5 or more', 5)
     }
 
   })

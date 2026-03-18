@@ -3,9 +3,13 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import anecdoteServices from './services/request'
 import { useDispatch } from 'react-redux'
-import { notificationState } from './components/reducers/notification'
+import NotificationContent from './components/reducers/notification.jsx'
+import { useContext } from 'react'
+import { showNotification } from './components/reducers/notification.jsx'
 
 const App = () => {
+  const {dispatchNotif} = useContext(NotificationContent)
+
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
 
@@ -20,7 +24,7 @@ const App = () => {
     mutationFn: anecdoteServices.update,
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
-      dispatch(notificationState(`updated ${updated.content}`, 5))
+      showNotification(dispatchNotif, `updated ${updated.content}`, 5)
     }
   })
 
